@@ -6,6 +6,7 @@ export default async function SignUp(req, res) {
   try {
     const jwttoken = process.env.JWT
     const { name, email, password, confirmPassword, contact } = req.body;
+    console.log({ name, email, password, confirmPassword, contact })
 
     if (!name || !email || !password || !confirmPassword || !contact) {
       return res.status(400).json({ message: "All fields must be filled" });
