@@ -1,74 +1,109 @@
 import { useState } from "react";
 import axios from "axios";
-export function SignUp() {
+
+const SignUp = () => {
   const backendurl = import.meta.env.VITE_BACKEND_URL;
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [number, setNumber] = useState("");
-  const [name, setName] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword:"",
+    contact: "",
+  });
 
-  const sumbitHandler = async (e) => {
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    const data = { email, password, number, name };
-    const response = await axios.post(`${backendurl}/user/api/signup`, data);
-    console.log(response);
+
+    try {
+      const response = await axios.post(
+        `${backendurl}/user/api/signup`,
+        formData
+      );
+
+      console.log(response.data);
+      alert("Signup Successful");
+
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        number: "",
+      });
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+    }
   };
 
   return (
-    <div>
-      <h1>Form</h1>
-      <div className="flex iteblue-500nter w-full ">
-     <form action="/" className="flex flex-cols">
-          <input
-            type="text"
-            value={name}
-            placeholder="Enter name"
-            className
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-          />
+    <div className="flex items-center justify-center min-h-screen">
+      <form
+        onSubmit={submitHandler}
+        className="flex flex-col gap-4 w-96 p-6 border rounded-lg shadow"
+      >
+        <h1 className="text-2xl font-bold text-center">Sign Up</h1>
 
-          <input
-            type="email"
-            name=""
-            id=""
-            placeholder="Enter Email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
+        <input
+          type="text"
+          name="name"
+          placeholder="Enter Name"
+          value={formData.name}
+          onChange={handleChange}
+          className="border p-2 rounded"
+        />
 
-          <input
-            type="password"
-            name=""
-            id=""
-            placeholder="Enter Password"
-            placeholder="password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter Email"
+          value={formData.email}
+          onChange={handleChange}
+          className="border p-2 rounded"
+        />
 
-          <input
-            type="number"
-            placeholder="number"
-            name=""
-            id=""
-            value={number}
-            onChange={(e) => {
-              setNumber(e.target.value);
-            }}
-          />
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter Password"
+          value={formData.password}
+          onChange={handleChange}
+          className="border p-2 rounded"
+        />
 
-          <button type="submit" className="bg-black text-amber-50" onSubmit={sumbitHandler} > submit</button>
-        </form>
-      </div>
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Enter Confirm Password"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          className="border p-2 rounded"
+        />
+
+        <input
+          type="text"
+          name="contact"
+          placeholder="Enter Number"
+          value={formData.number}
+          onChange={handleChange}
+          className="border p-2 rounded"
+        />
+
+        <button
+          type="submit"
+          className="bg-black text-white p-2 rounded"
+        >
+          Submit
+        </button>
+      </form>
     </div>
   );
-}
+};
 
 export default SignUp;
